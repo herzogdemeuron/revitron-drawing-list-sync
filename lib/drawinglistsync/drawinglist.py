@@ -1,6 +1,5 @@
 import csv
 import shutil
-import _winreg
 from drawinglistsync.collections import DrawingList
 from os import system
 from os.path import dirname, join
@@ -28,10 +27,7 @@ def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter):
 	drawingList = DrawingList()
 	rows = []
 	with open(file) as f:
-		reader = csv.DictReader(
-				f,
-				range(1, PARAM_MAX_COLS),
-			  	delimiter=getListSeparator())
+		reader = csv.DictReader(f, range(1, PARAM_MAX_COLS))
 		for row in reader:
 			rows.append(row)
 	parameterCols = getParameterCols(rows, parameterRow)
@@ -50,13 +46,3 @@ def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter):
 					pass
 			drawingList.add(nr, data)
 	return drawingList, sheetNumberCol
-
-
-def getListSeparator():
-	'''
-	Reads the Windows list separator character from the registry
-	'''
-	registry = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
-	registryKey = _winreg.OpenKey(registry, r"Control Panel\International")
-	separator = _winreg.QueryValueEx(registryKey, "sList")[0]
-	return separator
