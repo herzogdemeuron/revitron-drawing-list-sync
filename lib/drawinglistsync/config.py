@@ -12,14 +12,13 @@ class Config:
 	createMissingSheets = False
 	createRevisionList = False
 	revisionsRow = ''
-	revisoinPrefix = ''
+	revisionsField = ''
 	worksheet = ''
 	maxCharsIndex = None
 	maxCharsDate = None
 	maxCharsTitle = None
 	maxRevisionLines = None
 	dateFormat = None
-	paramNames = None
 
 	def __init__(self):
 		config = DocumentConfigStorage().get(CONFIG_KEY, dict())
@@ -30,10 +29,10 @@ class Config:
 		self.createMissingSheets = config.get('createMissingSheets', False)
 		self.createRevisionList = config.get('createRevisionList', False)
 		self.revisionsRow = int(config.get('revisionsRow', '2'))
-		self.revisoinPrefix = config.get('revisoinPrefix', 'Revisions')
+		self.revisionsField = config.get('revisionsField', 'Revisions')
 		self.worksheet = config.get('worksheet', 'Sheets')
 		self.maxCharsIndex = int(config.get('maxCharsIndex', '4'))
 		self.maxCharsDate = int(config.get('maxCharsDate', '12'))
 		self.maxCharsTitle = int(config.get('maxCharsTitle', '36'))
+		self.maxRevisionLines = int(config.get('maxRevisionLines', '10'))
 		self.dateFormat = config.get('dateFormat', r'%d.%m.%Y')
-		
