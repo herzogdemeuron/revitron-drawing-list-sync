@@ -64,9 +64,9 @@ TextBox.create(
 TextBox.create(
     window,
     'Revisions',
-    'revisoinPrefix',
-    str(config.revisoinPrefix),
-    title='Prefix of Revision Parameters'
+    'revisionsField',
+    str(config.revisionsField),
+    title='Revisions Text Parameter Name'
 )
 
 TextBox.create(
@@ -95,6 +95,14 @@ TextBox.create(
 
 TextBox.create(
     window, 'Revisions', 'dateFormat', str(config.dateFormat), title='Date Format'
+)
+
+TextBox.create(
+    window,
+    'Revisions',
+    'maxRevisionLines',
+    str(config.maxRevisionLines),
+    title='Maximum Number of Lines'
 )
 
 window.show()

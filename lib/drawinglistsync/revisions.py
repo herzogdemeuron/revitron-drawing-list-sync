@@ -3,6 +3,7 @@ import datetime
 from drawinglistsync.collections import Revision, Revisions, RevisionsList
 from drawinglistsync.date import getDateFromString
 
+
 REVISIONS_MAX_COLS = 1000
 
 

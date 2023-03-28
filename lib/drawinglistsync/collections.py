@@ -52,7 +52,7 @@ class Revision(object):
 			pass
 
 	def __str__(self):
-		return '{}	{}	{}'.format(self.index, self.date, self.title)
+		return '{} {} {}'.format(self.index, self.date, self.title)
 
 
 class Revisions(GenericCollection):
@@ -64,7 +64,7 @@ class Revisions(GenericCollection):
 		self.maxLines = maxLines
 		super(Revisions, self).__init__()
 
-	def getLines(self):
+	def __str__(self):
 		text = ''
 		for rev in self._collection:
 			text += str(rev.Value) + '\r\n'
@@ -74,7 +74,7 @@ class Revisions(GenericCollection):
 				del (lines[n])
 			else:
 				break
-		return lines
+		return '\r\n'.join(lines)
 
 	def add(self, revision):
 		key = '{}_{}'.format(revision.index, revision.date)
