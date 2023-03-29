@@ -45,6 +45,14 @@ TextBox.create(
     title='Sheet Number Parameter'
 )
 
+TextBox.create(
+    window,
+    'Sheets',
+    'dateFormat',
+    str(config.dateFormat),
+    title='Output Date Format'
+)
+
 CheckBox.create(
     window,
     'Revisions',
@@ -93,9 +101,6 @@ TextBox.create(
     title='Maximum Title Length'
 )
 
-TextBox.create(
-    window, 'Revisions', 'dateFormat', str(config.dateFormat), title='Date Format'
-)
 
 window.show()
 

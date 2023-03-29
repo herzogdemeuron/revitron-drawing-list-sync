@@ -29,7 +29,7 @@ config.paramNames = paramNames
 config.maxRevisionLines = len(paramNames)
 
 csvSheets = createCsvFile(config.xlsFile, config.worksheet)
-drawingList, sheetNumberCol = getDrawinglistFromCsv(csvSheets, config.parameterRow, config.sheetIdParameter)
+drawingList, sheetNumberCol = getDrawinglistFromCsv(csvSheets, config.parameterRow, config.sheetIdParameter, config.dateFormat)
 revisionList = RevisionsList()
 
 if (config.createRevisionList):

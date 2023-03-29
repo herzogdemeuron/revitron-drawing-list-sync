@@ -1,5 +1,8 @@
 import csv
 import shutil
+import datetime
+import re
+from drawinglistsync.date import DATE_REGEX, normalizeDateString
 from drawinglistsync.collections import DrawingList
 from os import system
 from os.path import dirname, join
@@ -23,7 +26,7 @@ def getParameterCols(rows, parameterRow):
 	return [(value, row[value]) for value in row if row[value]]
 
 
-def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter):
+def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter, dateFormat):
 	drawingList = DrawingList()
 	rows = []
 	with open(file) as f:
@@ -41,7 +44,11 @@ def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter):
 				try:
 					col = item[0]
 					name = item[1]
-					data[name] = row[col]
+					value = row[col]
+					match = re.match('^' + DATE_REGEX + '$', value)
+					if match:
+						value = normalizeDateString(value, dateFormat)
+					data[name] = value
 				except:
 					pass
 			drawingList.add(nr, data)
