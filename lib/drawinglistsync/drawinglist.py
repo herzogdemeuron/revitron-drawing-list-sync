@@ -1,6 +1,5 @@
 import csv
 import shutil
-import datetime
 import re
 from drawinglistsync.date import DATE_REGEX, normalizeDateString
 from drawinglistsync.collections import DrawingList
