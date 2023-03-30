@@ -1,6 +1,7 @@
 import csv
 import shutil
-import _winreg
+import re
+from drawinglistsync.date import DATE_REGEX, normalizeDateString
 from drawinglistsync.collections import DrawingList
 from os import system
 from os.path import dirname, join
@@ -24,14 +25,11 @@ def getParameterCols(rows, parameterRow):
 	return [(value, row[value]) for value in row if row[value]]
 
 
-def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter):
+def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter, dateFormat):
 	drawingList = DrawingList()
 	rows = []
 	with open(file) as f:
-		reader = csv.DictReader(
-				f,
-				range(1, PARAM_MAX_COLS),
-			  	delimiter=getListSeparator())
+		reader = csv.DictReader(f, range(1, PARAM_MAX_COLS))
 		for row in reader:
 			rows.append(row)
 	parameterCols = getParameterCols(rows, parameterRow)
@@ -45,18 +43,12 @@ def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter):
 				try:
 					col = item[0]
 					name = item[1]
-					data[name] = row[col]
+					value = row[col]
+					match = re.match('^' + DATE_REGEX + '$', value)
+					if match:
+						value = normalizeDateString(value, dateFormat)
+					data[name] = value
 				except:
 					pass
 			drawingList.add(nr, data)
 	return drawingList, sheetNumberCol
-
-
-def getListSeparator():
-	'''
-	Reads the Windows list separator character from the registry
-	'''
-	registry = _winreg.ConnectRegistry(None, _winreg.HKEY_CURRENT_USER)
-	registryKey = _winreg.OpenKey(registry, r"Control Panel\International")
-	separator = _winreg.QueryValueEx(registryKey, "sList")[0]
-	return separator
