@@ -16,9 +16,12 @@ def createOrUpdateSheets(drawingList, revisionList, modelSheetCollection, config
 			sheetRevisions = revisionList.get(number)
 			if sheetRevisions:
 				lines = sheetRevisions.getLines()
-				for i in range(0, len(lines)):
-					paramName = config.paramNames[i]
-					_(sheet).set(paramName, lines[i])
+				for i in range(config.maxRevisionLines):
+					if i <len(lines):
+						paramName = config.paramNames[i]
+						_(sheet).set(paramName, lines[i])
+					else:
+						_(sheet).set(config.paramNames[i], '')
 
 
 def createSheet():

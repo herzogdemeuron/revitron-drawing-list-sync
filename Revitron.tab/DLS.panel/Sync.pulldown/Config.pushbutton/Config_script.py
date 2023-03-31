@@ -61,6 +61,14 @@ CheckBox.create(
     title='Enable Parsing Revisions'
 )
 
+CheckBox.create(
+    window,
+    'Revisions',
+    'showAuthor',
+    config.showAuthor,
+    title='Show Author'
+)
+
 TextBox.create(
     window,
     'Revisions',
@@ -75,22 +83,6 @@ TextBox.create(
     'revisoinPrefix',
     str(config.revisoinPrefix),
     title='Prefix of Revision Parameters'
-)
-
-TextBox.create(
-    window,
-    'Revisions',
-    'maxCharsIndex',
-    str(config.maxCharsIndex),
-    title='Maximum Index Length'
-)
-
-TextBox.create(
-    window,
-    'Revisions',
-    'maxCharsDate',
-    str(config.maxCharsDate),
-    title='Maximum Date Length'
 )
 
 TextBox.create(

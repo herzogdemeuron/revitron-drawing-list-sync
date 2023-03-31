@@ -32,9 +32,9 @@ def getRevisionsFromCsv(file, revisionsRow, sheetNumberCol, format):
 			try:
 				rev = Revision(row[col], item[1], format)
 				date = getDateFromString(rev.date)
-				sheetRevisions.add(rev)
 				if date >= datetime.datetime.now():
 					break
+				sheetRevisions.add(rev)
 			except:
 				pass
 		revisionsList.add(nr, sheetRevisions)
@@ -48,6 +48,7 @@ class RevisionFormat(object):
 	maxCharsTitle = None
 	maxLines = None
 	dateFormat = None
+	showAuthor = None
 
 	def __init__(self, config):
 		self.maxCharsIndex = config.maxCharsIndex
@@ -55,3 +56,4 @@ class RevisionFormat(object):
 		self.maxCharsTitle = config.maxCharsTitle
 		self.maxLines = config.maxRevisionLines
 		self.dateFormat = config.dateFormat
+		self.showAuthor = config.showAuthor
