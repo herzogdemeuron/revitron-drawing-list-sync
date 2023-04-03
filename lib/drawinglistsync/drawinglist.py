@@ -15,8 +15,9 @@ def createCsvFile(xls, worksheet):
 	copy = join(tmp, 'sheets.xls')
 	csv = join(tmp, 'sheets.csv')
 	convert = join(dirname(__file__), 'convert.bat')
-	user_profile = environ.get('USERPROFILE')
-	xls = xls.replace('%USERPROFILE%',user_profile)
+	if '%USERPROFILE%' in xls:
+		user_profile = environ.get('USERPROFILE')
+		xls = xls.replace('%USERPROFILE%',user_profile)
 	shutil.copyfile(xls, copy)
 	system('{} "{}" "{}" "{}"'.format(convert, copy, worksheet, csv))
 	print(csv)

@@ -23,7 +23,7 @@ for item in Filter().byCategory('Sheets').noTypes().getElements():
 
 paramNames = getParams(modelSheetCollection, config)
 if len(paramNames) < 1:
-	forms.alert('There is no Parameters match Prefix!', exitscript=True)
+	forms.alert('There is no Parameters match the given prefix.', exitscript=True)
 	
 config.paramNames = paramNames
 config.maxRevisionLines = len(paramNames)
