@@ -19,6 +19,7 @@ def createCsvFile(xls, worksheet):
 	xls = xls.replace('%USERPROFILE%',user_profile)
 	shutil.copyfile(xls, copy)
 	system('{} "{}" "{}" "{}"'.format(convert, copy, worksheet, csv))
+	print(csv)
 	return csv
 
 
