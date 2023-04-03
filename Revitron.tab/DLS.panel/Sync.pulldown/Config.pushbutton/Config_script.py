@@ -45,12 +45,28 @@ TextBox.create(
     title='Sheet Number Parameter'
 )
 
+TextBox.create(
+    window,
+    'Sheets',
+    'dateFormat',
+    str(config.dateFormat),
+    title='Output Date Format'
+)
+
 CheckBox.create(
     window,
     'Revisions',
     'createRevisionList',
     config.createRevisionList,
     title='Enable Parsing Revisions'
+)
+
+CheckBox.create(
+    window,
+    'Revisions',
+    'showAuthor',
+    config.showAuthor,
+    title='Show Author'
 )
 
 TextBox.create(
@@ -64,25 +80,9 @@ TextBox.create(
 TextBox.create(
     window,
     'Revisions',
-    'revisionsField',
-    str(config.revisionsField),
-    title='Revisions Text Parameter Name'
-)
-
-TextBox.create(
-    window,
-    'Revisions',
-    'maxCharsIndex',
-    str(config.maxCharsIndex),
-    title='Maximum Index Length'
-)
-
-TextBox.create(
-    window,
-    'Revisions',
-    'maxCharsDate',
-    str(config.maxCharsDate),
-    title='Maximum Date Length'
+    'revisoinPrefix',
+    str(config.revisoinPrefix),
+    title='Prefix of Revision Parameters'
 )
 
 TextBox.create(
@@ -93,17 +93,6 @@ TextBox.create(
     title='Maximum Title Length'
 )
 
-TextBox.create(
-    window, 'Revisions', 'dateFormat', str(config.dateFormat), title='Date Format'
-)
-
-TextBox.create(
-    window,
-    'Revisions',
-    'maxRevisionLines',
-    str(config.maxRevisionLines),
-    title='Maximum Number of Lines'
-)
 
 window.show()
 

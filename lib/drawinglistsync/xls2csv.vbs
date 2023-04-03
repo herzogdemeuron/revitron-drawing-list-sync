@@ -8,6 +8,6 @@ Dim workbook
 Set workbook = excel.Workbooks.Open(Wscript.Arguments.Item(0))
 Set sheetDrawingList = workbook.Sheets(WScript.Arguments.Item(1))
 sheetDrawingList.Activate
-workbook.SaveAs WScript.Arguments.Item(2), 6, , , , , , , , , , True
+workbook.SaveAs WScript.Arguments.Item(2), 6
 workbook.Close False
 excel.Quit

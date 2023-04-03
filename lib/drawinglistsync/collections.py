@@ -35,15 +35,20 @@ class Revision(object):
 	index = ''
 	date = ''
 	title = ''
+	author = ''
 	format = None
 
 	def __init__(self, index, text, format):
 		matches = re.match('^' + DATE_REGEX + '(.*)$', text, re.MULTILINE)
-		self.index = index.ljust(format.maxCharsIndex)
+		indexAuthorRegex = '^(\w+)\s*(?:\(([^)]+)\))?'
+		matchesIndexAuthor = re.match(indexAuthorRegex, index)
+		self.index = matchesIndexAuthor.group(1)
+		self.author = matchesIndexAuthor.group(2)
+		self.author = self.author if self.author else ''
 		self.format = format
 		try:
 			date = normalizeDateString(matches.group(1), format.dateFormat)
-			self.date = date.ljust(format.maxCharsDate)
+			self.date = date
 			title = matches.group(2).lstrip()
 			if len(title) > format.maxCharsTitle:
 				title = title[:format.maxCharsTitle] + ' ...'
@@ -52,7 +57,10 @@ class Revision(object):
 			pass
 
 	def __str__(self):
-		return '{} {} {}'.format(self.index, self.date, self.title)
+		lineList = [self.index, self.date, self.title]
+		if self.format.showAuthor:
+			lineList.insert(2, self.author)
+		return '\t'.join(lineList)
 
 
 class Revisions(GenericCollection):
@@ -64,7 +72,7 @@ class Revisions(GenericCollection):
 		self.maxLines = maxLines
 		super(Revisions, self).__init__()
 
-	def __str__(self):
+	def getLines(self):
 		text = ''
 		for rev in self._collection:
 			text += str(rev.Value) + '\r\n'
@@ -74,16 +82,11 @@ class Revisions(GenericCollection):
 				del (lines[n])
 			else:
 				break
-		return '\r\n'.join(lines)
+		return lines
 
 	def add(self, revision):
 		key = '{}_{}'.format(revision.index, revision.date)
-		_rev = self.get(key)
-		if _rev:
-			space = (_rev.format.maxCharsIndex + _rev.format.maxCharsDate + 2) * ' '
-			_rev.title += '\r\n{}{}'.format(space, revision.title)
-		else:
-			self._collection.Add(key, revision)
+		self._collection.Add(key, revision)
 
 
 class RevisionsList(GenericCollection):

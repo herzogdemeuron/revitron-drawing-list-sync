@@ -1,14 +1,16 @@
 import datetime
-import re
 
-DATE_REGEX = '(\d{1,2}\.\d{1,2}\.\d{4}|\d{6}|\d{4}-\d{2}-\d{2})'
-DATE_US_REGEX = '(\d{1,2}\/\d{1,2}\/\d{4})'
+DATE_REGEX = '(\d{1,2}\.\d{1,2}\.\d{2,4}|\d{6}|\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{1,2}-\d{1,2}-\d{4})'
 DATE_FORMATS = [
     r'%d.%m.%Y',  # 31.01.2023
+	r'%d.%m.%y',  # 31.01.23
     r'%y%m%d',  # 230131
     r'%Y-%m-%d',  # 2023-01-31
-    r'%m/%d/%Y', # 12/31/2022
+    r'%m/%d/%Y',  # 01/31/2023
+    r'%d/%m/%y',  # 31/01/23
+    r'%d-%m-%Y',  # 31-01-2023
 ]
+
 
 def getDateFromString(dateString):
 	for format in DATE_FORMATS:
@@ -19,13 +21,9 @@ def getDateFromString(dateString):
 		except:
 			pass
 
+
 def normalizeDateString(dateString, outputFormat):
 	date = getDateFromString(dateString)
 	if date:
 		return date.strftime(outputFormat)
 	return ''
-
-def isUsDateFormat(dateString):
-	if re.match('^' + DATE_US_REGEX + '(.*)$', dateString):
-		return True
-	return False
