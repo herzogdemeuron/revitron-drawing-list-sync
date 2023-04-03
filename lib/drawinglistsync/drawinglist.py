@@ -3,7 +3,7 @@ import shutil
 import re
 from drawinglistsync.date import DATE_REGEX, normalizeDateString
 from drawinglistsync.collections import DrawingList
-from os import system
+from os import system, environ
 from os.path import dirname, join
 from tempfile import mkdtemp
 
@@ -15,6 +15,8 @@ def createCsvFile(xls, worksheet):
 	copy = join(tmp, 'sheets.xls')
 	csv = join(tmp, 'sheets.csv')
 	convert = join(dirname(__file__), 'convert.bat')
+	user_profile = environ.get('USERPROFILE')
+	xls = xls.replace('%USERPROFILE%',user_profile)
 	shutil.copyfile(xls, copy)
 	system('{} "{}" "{}" "{}"'.format(convert, copy, worksheet, csv))
 	return csv
