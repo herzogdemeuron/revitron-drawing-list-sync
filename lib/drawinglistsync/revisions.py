@@ -32,9 +32,9 @@ def getRevisionsFromCsv(file, revisionsRow, sheetNumberCol, format):
 			try:
 				rev = Revision(row[col], item[1], format)
 				date = getDateFromString(rev.date)
+				sheetRevisions.add(rev)
 				if date >= datetime.datetime.now():
 					break
-				sheetRevisions.add(rev)
 			except:
 				pass
 		revisionsList.add(nr, sheetRevisions)
