@@ -1,5 +1,6 @@
 import csv
-import shutil
+import ctypes
+from ctypes import wintypes
 import re
 from drawinglistsync.date import DATE_REGEX, normalizeDateString
 from drawinglistsync.collections import DrawingList
@@ -8,7 +9,21 @@ from os.path import dirname, join
 from tempfile import mkdtemp
 
 PARAM_MAX_COLS = 1000
+# Define the necessary types
+LPWSTR = ctypes.c_wchar_p
+LPVOID = ctypes.c_void_p
+LPBOOL = ctypes.POINTER(ctypes.c_int)
+DWORD = ctypes.c_uint32
 
+# Define the CopyFileEx function from the Windows API
+copy_file_ex = ctypes.windll.kernel32.CopyFileExW
+copy_file_ex.argtypes = [LPWSTR, LPWSTR, LPVOID, LPVOID, LPBOOL, DWORD]
+copy_file_ex.restype = ctypes.c_int
+
+def copy_file(source, dest):
+    """Copy a file from source to dest using the Windows CopyFileEx function."""
+    if not copy_file_ex(source, dest, None, None, None, 0):
+    	return None
 
 def createCsvFile(xls, worksheet):
 	tmp = mkdtemp(prefix='drawinglistsync')
@@ -18,10 +33,9 @@ def createCsvFile(xls, worksheet):
 	if '%USERPROFILE%' in xls:
 		user_profile = environ.get('USERPROFILE')
 		xls = xls.replace('%USERPROFILE%',user_profile)
-	shutil.copyfile(xls, copy)
+	copy_file(xls, copy)
 	system('{} "{}" "{}" "{}"'.format(convert, copy, worksheet, csv))
 	return csv
-
 
 def getParameterCols(rows, parameterRow):
 	row = rows[parameterRow - 1]
