@@ -9,15 +9,21 @@ from os.path import dirname, join
 from tempfile import mkdtemp
 
 PARAM_MAX_COLS = 1000
+# Define the necessary types
+LPWSTR = ctypes.c_wchar_p
+LPVOID = ctypes.c_void_p
+LPBOOL = ctypes.POINTER(ctypes.c_int)
+DWORD = ctypes.c_uint32
+
 # Define the CopyFileEx function from the Windows API
 copy_file_ex = ctypes.windll.kernel32.CopyFileExW
-copy_file_ex.argtypes = [wintypes.LPCWSTR, wintypes.LPCWSTR, wintypes.LPVOID, wintypes.LPVOID, wintypes.LPBOOL, wintypes.DWORD]
-copy_file_ex.restype = wintypes.BOOL
+copy_file_ex.argtypes = [LPWSTR, LPWSTR, LPVOID, LPVOID, LPBOOL, DWORD]
+copy_file_ex.restype = ctypes.c_int
 
 def copy_file(source, dest):
     """Copy a file from source to dest using the Windows CopyFileEx function."""
     if not copy_file_ex(source, dest, None, None, None, 0):
-        raise ctypes.WinError()
+    	return None
 
 def createCsvFile(xls, worksheet):
 	tmp = mkdtemp(prefix='drawinglistsync')
