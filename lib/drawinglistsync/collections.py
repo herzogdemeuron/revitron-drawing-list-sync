@@ -40,7 +40,7 @@ class Revision(object):
 
 	def __init__(self, index, text, format):
 		matches = re.match('^' + DATE_REGEX + '(.*)$', text, re.MULTILINE)
-		indexAuthorRegex = '^(\w+)\s*(?:\(([^)]+)\))?'
+		indexAuthorRegex = '^([\w-]+)\s*(?:\(([^)]+)\))?'
 		matchesIndexAuthor = re.match(indexAuthorRegex, index)
 		self.index = matchesIndexAuthor.group(1)
 		self.author = matchesIndexAuthor.group(2)
