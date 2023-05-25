@@ -4,7 +4,7 @@ from ctypes import wintypes
 import re
 from drawinglistsync.date import DATE_REGEX, normalizeDateString
 from drawinglistsync.collections import DrawingList
-from os import system, environ
+from os import system, environ, getenv
 from os.path import dirname, join
 from tempfile import mkdtemp
 
@@ -22,17 +22,16 @@ copy_file_ex.restype = ctypes.c_int
 
 def copy_file(source, dest):
     """Copy a file from source to dest using the Windows CopyFileEx function."""
+    user_profile_path = getenv('USERPROFILE')
+    source = source.replace('%USERPROFILE%', user_profile_path)
     if not copy_file_ex(source, dest, None, None, None, 0):
-    	return None
+        return None
 
 def createCsvFile(xls, worksheet):
 	tmp = mkdtemp(prefix='drawinglistsync')
 	copy = join(tmp, 'sheets.xls')
 	csv = join(tmp, 'sheets.csv')
 	convert = join(dirname(__file__), 'convert.bat')
-	if '%USERPROFILE%' in xls:
-		user_profile = environ.get('USERPROFILE')
-		xls = xls.replace('%USERPROFILE%',user_profile)
 	copy_file(xls, copy)
 	system('{} "{}" "{}" "{}"'.format(convert, copy, worksheet, csv))
 	return csv
