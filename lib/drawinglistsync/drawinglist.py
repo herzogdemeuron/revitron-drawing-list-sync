@@ -40,7 +40,6 @@ def getParameterCols(rows, parameterRow):
 	row = rows[parameterRow - 1]
 	return [(value, row[value]) for value in row if row[value]]
 
-
 def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter, dateFormat):
 	drawingList = DrawingList()
 	rows = []
