@@ -5,8 +5,11 @@ import re
 from drawinglistsync.date import DATE_REGEX, normalizeDateString
 from drawinglistsync.collections import DrawingList
 from os import system, environ, getenv
-from os.path import dirname, join
+from os.path import dirname, join, isfile
 from tempfile import mkdtemp
+import clr
+clr.AddReference('RevitAPIUI') 
+from Autodesk.Revit.UI import TaskDialog
 
 PARAM_MAX_COLS = 1000
 # Define the necessary types
@@ -21,18 +24,25 @@ copy_file_ex.argtypes = [LPWSTR, LPWSTR, LPVOID, LPVOID, LPBOOL, DWORD]
 copy_file_ex.restype = ctypes.c_int
 
 def copy_file(source, dest):
-    """Copy a file from source to dest using the Windows CopyFileEx function."""
-    user_profile_path = getenv('USERPROFILE')
-    source = source.replace('%USERPROFILE%', user_profile_path)
-    if not copy_file_ex(source, dest, None, None, None, 0):
-        return None
+	"""Copy a file from source to dest using the Windows CopyFileEx function."""
+	user_profile_path = getenv('USERPROFILE')
+	source = source.replace('%USERPROFILE%', user_profile_path)
+	if not isfile(source):
+		error_msg = TaskDialog.Show("HdM DT - Error","Source file can not be found at path.")
+		return None
+	copy_file_ex(source, dest, None, None, None, 0)
+	if not isfile(dest):
+		error_msg = TaskDialog.Show("HdM DT - Error","Could not copy source file.")
+		return None
 
 def createCsvFile(xls, worksheet):
 	tmp = mkdtemp(prefix='drawinglistsync')
 	copy = join(tmp, 'sheets.xls')
 	csv = join(tmp, 'sheets.csv')
 	convert = join(dirname(__file__), 'convert.bat')
-	copy_file(xls, copy)
+	copy_process = copy_file(xls, copy)
+	if copy_process == None:
+		return None
 	system('{} "{}" "{}" "{}"'.format(convert, copy, worksheet, csv))
 	return csv
 
@@ -41,6 +51,9 @@ def getParameterCols(rows, parameterRow):
 	return [(value, row[value]) for value in row if row[value]]
 
 def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter, dateFormat):
+	if not isfile(file):
+		error_msg = TaskDialog.Show("HdM DT - Error","Drawing-List file can not be converted to csv.")
+		return None, None
 	drawingList = DrawingList()
 	rows = []
 	with open(file) as f:

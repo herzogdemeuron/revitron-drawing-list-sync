@@ -29,13 +29,15 @@ config.paramNames = paramNames
 config.maxRevisionLines = len(paramNames)
 
 csvSheets = createCsvFile(config.xlsFile, config.worksheet)
-drawingList, sheetNumberCol = getDrawinglistFromCsv(csvSheets, config.parameterRow, config.sheetIdParameter, config.dateFormat)
-revisionList = RevisionsList()
+if csvSheets != None:
+    drawingList, sheetNumberCol = getDrawinglistFromCsv(csvSheets, config.parameterRow, config.sheetIdParameter, config.dateFormat)
+    if drawingList != None and sheetNumberCol != None:
+        revisionList = RevisionsList()
 
-if (config.createRevisionList):
-	revisionList = getRevisionsFromCsv(
-	    csvSheets, config.revisionsRow, sheetNumberCol, RevisionFormat(config)
-	)
+        if (config.createRevisionList):
+            revisionList = getRevisionsFromCsv(
+                csvSheets, config.revisionsRow, sheetNumberCol, RevisionFormat(config)
+            )
 
-with Transaction():
-	createOrUpdateSheets(drawingList, revisionList, modelSheetCollection, config)
+        with Transaction():
+            createOrUpdateSheets(drawingList, revisionList, modelSheetCollection, config)
