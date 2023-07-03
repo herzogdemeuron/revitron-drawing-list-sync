@@ -34,6 +34,7 @@ def copy_file(source, dest):
 	if not isfile(dest):
 		error_msg = TaskDialog.Show("HdM DT - Error","Could not copy source file.")
 		return None
+	return True
 
 def createCsvFile(xls, worksheet):
 	tmp = mkdtemp(prefix='drawinglistsync')
