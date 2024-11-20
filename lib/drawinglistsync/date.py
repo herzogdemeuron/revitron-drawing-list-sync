@@ -26,4 +26,4 @@ def normalizeDateString(dateString, outputFormat):
 	date = getDateFromString(dateString)
 	if date:
 		return date.strftime(outputFormat)
-	return ''
+	return dateString
