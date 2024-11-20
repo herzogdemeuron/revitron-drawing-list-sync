@@ -52,32 +52,40 @@ def getParameterCols(rows, parameterRow):
 	return [(value, row[value]) for value in row if row[value]]
 
 def getDrawinglistFromCsv(file, parameterRow, sheetIdParameter, dateFormat):
-	if not isfile(file):
-		error_msg = TaskDialog.Show("HdM DT - Error","Drawing-List file can not be converted to csv.")
-		return None, None
-	drawingList = DrawingList()
-	rows = []
-	with open(file) as f:
-		reader = csv.DictReader(f, range(1, PARAM_MAX_COLS))
-		for row in reader:
-			rows.append(row)
-	parameterCols = getParameterCols(rows, parameterRow)
-	sheetNumberCol = [item[0] for item in parameterCols if item[1] == sheetIdParameter][0]
-	for n in range(parameterRow, len(rows)):
-		row = rows[n]
-		nr = row[sheetNumberCol]
-		if nr:
-			data = {}
-			for item in parameterCols:
-				try:
-					col = item[0]
-					name = item[1]
-					value = row[col]
-					match = re.match('^' + DATE_REGEX + '$', value)
-					if match:
-						value = normalizeDateString(value, dateFormat)
-					data[name] = value
-				except:
-					pass
-			drawingList.add(nr, data)
-	return drawingList, sheetNumberCol
+    if not isfile(file):
+        error_msg = TaskDialog.Show("HdM DT - Error", "Drawing-List file can not be converted to csv.")
+        return None, None
+        
+    drawingList = DrawingList()
+    rows = []
+    with open(file) as f:
+        reader = csv.DictReader(f, range(1, PARAM_MAX_COLS))
+        for row in reader:
+            rows.append(row)
+            
+    parameterCols = getParameterCols(rows, parameterRow)
+    try:
+        sheetNumberCol = [item[0] for item in parameterCols if item[1] == sheetIdParameter][0]
+    except:
+        TaskDialog.Show("HdM DT - Warning", "Please check the Row Number configuration and remove empty rows from the top of your Drawing-List Excel")
+        return None, None
+        
+    for n in range(parameterRow, len(rows)):
+        row = rows[n]
+        nr = row[sheetNumberCol]
+        if nr:
+            data = {}
+            for item in parameterCols:
+                try:
+                    col = item[0]
+                    name = item[1]
+                    value = row[col]
+                    match = re.match('^' + DATE_REGEX + '$', value)
+                    if match:
+                        value = normalizeDateString(value, dateFormat)
+                    data[name] = value
+                except:
+                    pass
+            drawingList.add(nr, data)
+            
+    return drawingList, sheetNumberCol

@@ -2,25 +2,40 @@ import re
 from revitron import DB
 from drawinglistsync.date import DATE_REGEX, normalizeDateString
 from System.Collections.Generic import Dictionary
-
+from Autodesk.Revit.UI import TaskDialog
+import sys
 
 class GenericCollection(object):
 
-	valueType = dict
+    valueType = dict
 
-	def __init__(self):
-		self._collection = Dictionary[str, self.valueType]()
+    def __init__(self):
+        self._collection = Dictionary[str, self.valueType]()
 
-	def add(self, key, data):
-		self._collection.Add(str(key), data)
+    def add(self, key, data):
+        if not key:
+            TaskDialog.Show(
+                "HdM DT - Error",
+                "Parameter issue detected. Please check your sheet number parameter configuration and try again."
+            )
+            sys.exit()
+            
+        str_key = str(key)
+        if self._collection.ContainsKey(str_key):
+            TaskDialog.Show(
+                "HdM DT - Error",
+                "Duplicate sheet number '{}' found in drawing list. Please remove duplicates and try again.".format(str_key)
+            )
+            sys.exit()
+            
+        self._collection.Add(str_key, data)
 
-	def get(self, key):
-		success, value = self._collection.TryGetValue(str(key))
-		return value
+    def get(self, key):
+        success, value = self._collection.TryGetValue(str(key))
+        return value
 
-	def all(self):
-		return self._collection.GetEnumerator()
-
+    def all(self):
+        return self._collection.GetEnumerator()
 
 class DrawingList(GenericCollection):
 	valueType = dict
