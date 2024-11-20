@@ -49,7 +49,7 @@ class RevisionFormat(object):
     maxLines = None
     dateFormat = None
     showAuthor = None
-    tabSeparatorCount = None
+    spaceSeparatorCount = None
 
     def __init__(self, config):
         self.maxCharsIndex = config.maxCharsIndex
@@ -58,4 +58,4 @@ class RevisionFormat(object):
         self.maxLines = config.maxRevisionLines
         self.dateFormat = config.dateFormat
         self.showAuthor = config.showAuthor
-        self.tabSeparatorCount = config.tabSeparatorCount
+        self.spaceSeparatorCount = config.spaceSeparatorCount

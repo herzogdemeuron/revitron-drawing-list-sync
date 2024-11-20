@@ -93,6 +93,14 @@ TextBox.create(
     title='Maximum Title Length'
 )
 
+TextBox.create(
+    window,
+    'Revisions',
+    'spaceSeparatorCount',
+    str(config.spaceSeparatorCount)[1:-1],
+    title='Space Separator Count (comma separated)'
+)
+
 
 window.show()
 

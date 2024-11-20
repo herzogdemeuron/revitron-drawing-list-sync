@@ -75,8 +75,15 @@ class Revision(object):
         lineList = [self.index, self.date, self.title]
         if self.format.showAuthor:
             lineList.insert(2, self.author)
-        return ('\t' * self.format.tabSeparatorCount).join(lineList)
-
+        
+        # Get spacing list, extend with 0s if needed
+        spaces = self.format.spaceSeparatorCount + [0] * (len(lineList) - 1 - len(self.format.spaceSeparatorCount))
+        
+        # Build string with individual spacing
+        result = lineList[0]
+        for i in range(1, len(lineList)):
+            result += '\t' + ' ' * spaces[i-1] + lineList[i]
+        return result
 
 class Revisions(GenericCollection):
 
