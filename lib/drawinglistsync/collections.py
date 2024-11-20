@@ -47,35 +47,35 @@ class ModelSheetCollection(GenericCollection):
 
 class Revision(object):
 
-	index = ''
-	date = ''
-	title = ''
-	author = ''
-	format = None
+    index = ''
+    date = ''
+    title = ''
+    author = ''
+    format = None
 
-	def __init__(self, index, text, format):
-		matches = re.match('^' + DATE_REGEX + '(.*)$', text, re.MULTILINE)
-		indexAuthorRegex = '^([\w-]+)\s*(?:\(([^)]+)\))?'
-		matchesIndexAuthor = re.match(indexAuthorRegex, index)
-		self.index = matchesIndexAuthor.group(1)
-		self.author = matchesIndexAuthor.group(2)
-		self.author = self.author if self.author else ''
-		self.format = format
-		try:
-			date = normalizeDateString(matches.group(1), format.dateFormat)
-			self.date = date
-			title = matches.group(2).lstrip()
-			if len(title) > format.maxCharsTitle:
-				title = title[:format.maxCharsTitle] + ' ...'
-			self.title = title
-		except:
-			pass
+    def __init__(self, index, text, format):
+        matches = re.match('^' + DATE_REGEX + '(.*)$', text, re.MULTILINE)
+        indexAuthorRegex = '^([\w-]+)\s*(?:\(([^)]+)\))?'
+        matchesIndexAuthor = re.match(indexAuthorRegex, index)
+        self.index = matchesIndexAuthor.group(1)
+        self.author = matchesIndexAuthor.group(2)
+        self.author = self.author if self.author else ''
+        self.format = format
+        try:
+            date = normalizeDateString(matches.group(1), format.dateFormat)
+            self.date = date
+            title = matches.group(2).lstrip()
+            if len(title) > format.maxCharsTitle:
+                title = title[:format.maxCharsTitle] + ' ...'
+            self.title = title
+        except:
+            pass
 
-	def __str__(self):
-		lineList = [self.index, self.date, self.title]
-		if self.format.showAuthor:
-			lineList.insert(2, self.author)
-		return '\t'.join(lineList)
+    def __str__(self):
+        lineList = [self.index, self.date, self.title]
+        if self.format.showAuthor:
+            lineList.insert(2, self.author)
+        return ('\t' * self.format.tabSeparatorCount).join(lineList)
 
 
 class Revisions(GenericCollection):

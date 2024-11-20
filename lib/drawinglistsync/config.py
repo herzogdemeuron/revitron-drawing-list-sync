@@ -38,3 +38,4 @@ class Config:
 		self.maxCharsTitle = int(config.get('maxCharsTitle', '36'))
 		self.dateFormat = config.get('dateFormat', r'%d.%m.%Y')
 		self.showAuthor = config.get('showAuthor', False)
+		self.tabSeparatorCount = int(config.get('tabSeparatorCount', '1'))

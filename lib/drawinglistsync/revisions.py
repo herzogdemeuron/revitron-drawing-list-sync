@@ -43,17 +43,19 @@ def getRevisionsFromCsv(file, revisionsRow, sheetNumberCol, format):
 
 class RevisionFormat(object):
 
-	maxCharsIndex = None
-	maxCharsDate = None
-	maxCharsTitle = None
-	maxLines = None
-	dateFormat = None
-	showAuthor = None
+    maxCharsIndex = None
+    maxCharsDate = None
+    maxCharsTitle = None
+    maxLines = None
+    dateFormat = None
+    showAuthor = None
+    tabSeparatorCount = None
 
-	def __init__(self, config):
-		self.maxCharsIndex = config.maxCharsIndex
-		self.maxCharsDate = config.maxCharsDate
-		self.maxCharsTitle = config.maxCharsTitle
-		self.maxLines = config.maxRevisionLines
-		self.dateFormat = config.dateFormat
-		self.showAuthor = config.showAuthor
+    def __init__(self, config):
+        self.maxCharsIndex = config.maxCharsIndex
+        self.maxCharsDate = config.maxCharsDate
+        self.maxCharsTitle = config.maxCharsTitle
+        self.maxLines = config.maxRevisionLines
+        self.dateFormat = config.dateFormat
+        self.showAuthor = config.showAuthor
+        self.tabSeparatorCount = config.tabSeparatorCount
