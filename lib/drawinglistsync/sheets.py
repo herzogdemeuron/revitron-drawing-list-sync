@@ -1,6 +1,61 @@
 from revitron import _, DB, DOC
+from drawinglistsync.config import Config
+from pyrevit import forms
+
+# Add new variable to store selected titleblock for all sheets
+_selected_titleblock = None
+
+def createSheet():
+	global _selected_titleblock
+	invalid = DB.ElementId.InvalidElementId
+	
+	# Get all titleblock types
+	collector = DB.FilteredElementCollector(DOC).OfCategory(DB.BuiltInCategory.OST_TitleBlocks)
+	titleblock_types = collector.WhereElementIsElementType().ToElements()
+	
+	if titleblock_types.Count > 0:
+		# If we already have a selected titleblock, use it
+		if _selected_titleblock:
+			if _selected_titleblock == "None":
+				return DB.ViewSheet.Create(DOC, invalid)
+			sheet = DB.ViewSheet.Create(DOC, _selected_titleblock.Id)
+			if sheet:
+				return sheet
+				
+		# Create dictionary of titleblock names for selection
+		titleblock_dict = {"{}: {}".format(t.FamilyName, t.get_Parameter(DB.BuiltInParameter.SYMBOL_NAME_PARAM).AsString()): t 
+						  for t in titleblock_types}
+		# Add None option
+		titleblock_dict["None"] = "None"
+		
+		# Create message
+		message = 'Selected Titleblock will be applied to all created sheets'
+		
+		# Prompt user to select titleblock type
+		selected = forms.CommandSwitchWindow.show(
+			sorted(titleblock_dict.keys()),
+			message=message
+		)
+		
+		if selected:
+			# Store selection
+			_selected_titleblock = titleblock_dict[selected]
+			
+			# Create new sheet with selected titleblock
+			if _selected_titleblock == "None":
+				return DB.ViewSheet.Create(DOC, invalid)
+			sheet = DB.ViewSheet.Create(DOC, _selected_titleblock.Id)
+			if sheet:
+				return sheet
+	
+	# If no titleblocks available or selection cancelled, create sheet without titleblock
+	return DB.ViewSheet.Create(DOC, invalid)
+
 
 def createOrUpdateSheets(drawingList, revisionList, modelSheetCollection, config):
+	global _selected_titleblock
+	_selected_titleblock = None  # Reset the selection at start
+	
 	for item in drawingList.all():
 		number = item.Key
 		data = item.Value
@@ -22,11 +77,6 @@ def createOrUpdateSheets(drawingList, revisionList, modelSheetCollection, config
 						_(sheet).set(paramName, lines[i])
 					else:
 						_(sheet).set(config.paramNames[i], '')
-
-
-def createSheet():
-	invalid = DB.ElementId.InvalidElementId
-	return DB.ViewSheet.Create(DOC, invalid)
 
 
 def getParams(modelSheetCollection, config):
